@@ -4,6 +4,7 @@ import com.neronguyen.firebase.FirebaseAdmin
 import com.neronguyen.plugins.configureFirebaseAuth
 import com.neronguyen.plugins.configureRouting
 import com.neronguyen.plugins.configureSerialization
+import com.neronguyen.plugins.configureWebSocket
 import io.ktor.server.application.*
 
 fun main(args: Array<String>) {
@@ -14,5 +15,6 @@ fun Application.module() {
     FirebaseAdmin.init()
     configureSerialization()
     configureFirebaseAuth()
+    configureWebSocket()
     configureRouting()
 }
