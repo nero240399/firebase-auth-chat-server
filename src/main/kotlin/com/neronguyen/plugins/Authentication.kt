@@ -1,6 +1,6 @@
 package com.neronguyen.plugins
 
-import com.neronguyen.firebase.User
+import com.neronguyen.model.User
 import com.neronguyen.firebase.firebase
 import io.ktor.server.application.*
 import io.ktor.server.auth.*

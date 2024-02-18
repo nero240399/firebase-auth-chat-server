@@ -1,4 +1,4 @@
-package com.neronguyen.firebase
+package com.neronguyen.model
 
 import io.ktor.server.auth.*
 
