@@ -1,8 +1,10 @@
 package com.neronguyen.routes
 
+import com.google.firebase.messaging.FirebaseMessaging
 import com.neronguyen.firebase.FIREBASE_AUTH
 import com.neronguyen.model.Connection
 import com.neronguyen.model.User
+import com.neronguyen.model.toMessage
 import io.ktor.http.*
 import io.ktor.server.auth.*
 import io.ktor.server.response.*
@@ -25,6 +27,7 @@ fun Route.chatRoute() {
                     val text = frame.readText()
                     val textWithUsername = "[${connection.user.name}]: $text"
                     connections.forEach {
+                        FirebaseMessaging.getInstance().send(textWithUsername.toMessage())
                         it.session.send(textWithUsername)
                     }
                 }
