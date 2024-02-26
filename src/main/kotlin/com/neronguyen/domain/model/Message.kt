@@ -1,4 +1,4 @@
-package com.neronguyen.model
+package com.neronguyen.domain.model
 
 import com.google.firebase.messaging.Message
 import com.google.firebase.messaging.Notification

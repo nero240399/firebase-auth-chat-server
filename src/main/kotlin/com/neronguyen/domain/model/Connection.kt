@@ -1,4 +1,4 @@
-package com.neronguyen.model
+package com.neronguyen.domain.model
 
 import io.ktor.websocket.*
 

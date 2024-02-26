@@ -1,6 +1,6 @@
-package com.neronguyen.plugins
+package com.neronguyen.application.plugins
 
-import com.neronguyen.routes.chatRoute
+import com.neronguyen.application.routes.chatRoute
 import io.ktor.server.application.*
 import io.ktor.server.routing.*
 
