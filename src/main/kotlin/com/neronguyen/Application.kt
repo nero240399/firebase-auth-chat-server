@@ -1,14 +1,12 @@
 package com.neronguyen
 
+import com.neronguyen.application.plugins.*
 import com.neronguyen.firebase.FirebaseAdmin
-import com.neronguyen.plugins.configureFirebaseAuth
-import com.neronguyen.plugins.configureRouting
-import com.neronguyen.plugins.configureSerialization
-import com.neronguyen.plugins.configureWebSocket
 import io.ktor.server.application.*
+import io.ktor.server.netty.*
 
 fun main(args: Array<String>) {
-    io.ktor.server.netty.EngineMain.main(args)
+    EngineMain.main(args)
 }
 
 fun Application.module() {
@@ -16,5 +14,6 @@ fun Application.module() {
     configureSerialization()
     configureFirebaseAuth()
     configureWebSocket()
+    configureDI()
     configureRouting()
 }
