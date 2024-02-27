@@ -1,12 +1,12 @@
 package com.neronguyen.infrastructure
 
 import com.mongodb.MongoException
-import com.mongodb.client.model.Filters
-import com.mongodb.client.model.UpdateOptions
-import com.mongodb.client.model.Updates
+import com.mongodb.client.model.*
 import com.mongodb.kotlin.client.coroutine.MongoDatabase
-import com.neronguyen.domain.port.UserRepository
 import com.neronguyen.domain.model.User
+import com.neronguyen.domain.model.UserMessage
+import com.neronguyen.domain.port.UserRepository
+import kotlinx.coroutines.flow.toList
 
 
 class DefaultUserRepository(
@@ -27,14 +27,27 @@ class DefaultUserRepository(
                 Updates.set(User::photoUrl.name, user.photoUrl)
             )
             val options = UpdateOptions().upsert(true)
-            val result = mongoDatabase.getCollection<User>(USER_COLLECTION)
-                .updateOne(filter, updates, options)
-
+            val result = mongoDatabase.getCollection<User>(USER_COLLECTION).updateOne(filter, updates, options)
             return result.modifiedCount
         } catch (e: MongoException) {
             System.err.println("Unable to update due to an error: $e")
         }
 
         return 0
+    }
+
+    override suspend fun findAll(): List<User> {
+        return mongoDatabase.getCollection<User>(USER_COLLECTION).find().toList()
+    }
+
+    override suspend fun insertUserMessage(userId: String, userMessage: UserMessage) {
+        try {
+            val filter = Filters.eq(User::id.name, userId)
+            val updates = Updates.push(User::messages.name, userMessage)
+            val options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
+            mongoDatabase.getCollection<User>(USER_COLLECTION).findOneAndUpdate(filter, updates, options)
+        } catch (e: MongoException) {
+            System.err.println("Unable to add due to an error: $e")
+        }
     }
 }
