@@ -5,6 +5,7 @@ import com.neronguyen.application.response.toMessage
 import com.neronguyen.domain.model.Connection
 import com.neronguyen.domain.model.User
 import com.neronguyen.domain.model.UserMessage
+import com.neronguyen.domain.model.toMessageResponseList
 import com.neronguyen.domain.port.UserRepository
 import com.neronguyen.firebase.FIREBASE_AUTH
 import io.ktor.http.*
@@ -14,8 +15,6 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
 import io.ktor.websocket.*
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import org.koin.ktor.ext.inject
 import java.util.*
 
@@ -53,11 +52,8 @@ fun Route.chatRoute() {
 
         get("chatHistory") {
             val users = userRepository.findAll()
-            val chatHistory = users.flatMap { user -> user.messages.map { message -> "[${user.name}]: ${message.content}" } }
-            call.respondText(
-                Json.encodeToString(chatHistory),
-                contentType = ContentType.Application.Json
-            )
+            val chatHistory = users.flatMap { user -> user.toMessageResponseList() }
+            call.respond(chatHistory)
         }
     }
 }
