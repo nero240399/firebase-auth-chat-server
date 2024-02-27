@@ -28,3 +28,11 @@ fun User.toMessageResponseList(): List<MessageResponse> = this.messages.map {
         timestamp = it.timestamp.toKotlinInstant()
     )
 }
+
+fun User.toMessageResponse(message: String) = MessageResponse(
+        userId = id,
+        username = name,
+        email = email,
+        photoUrl = photoUrl,
+        content = message,
+)

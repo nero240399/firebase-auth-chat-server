@@ -2,10 +2,7 @@ package com.neronguyen.application.routes
 
 import com.google.firebase.messaging.FirebaseMessaging
 import com.neronguyen.application.response.toMessage
-import com.neronguyen.domain.model.Connection
-import com.neronguyen.domain.model.User
-import com.neronguyen.domain.model.UserMessage
-import com.neronguyen.domain.model.toMessageResponseList
+import com.neronguyen.domain.model.*
 import com.neronguyen.domain.port.UserRepository
 import com.neronguyen.firebase.FIREBASE_AUTH
 import io.ktor.http.*
@@ -27,23 +24,22 @@ fun Route.chatRoute() {
         webSocket("chat") {
 
             val user: User = call.principal() ?: return@webSocket call.respond(HttpStatusCode.Unauthorized)
-            val connection = Connection(this, user)
+            val connection = Connection(this)
             connections += connection
 
             try {
-                send("${user.name} joined.")
                 for (frame in incoming) {
                     frame as? Frame.Text ?: continue
                     val text = frame.readText()
-                    val textWithUsername = "[${connection.user.name}]: $text"
                     userRepository.insertUserMessage(user.id, UserMessage(text))
+
                     connections.forEach {
-                        FirebaseMessaging.getInstance().send(textWithUsername.toMessage())
-                        it.session.send(textWithUsername)
+                        FirebaseMessaging.getInstance().send("[${user.name}] $text".toMessage())
+                        it.session.sendSerialized(user.toMessageResponse(text))
                     }
                 }
             } catch (e: Exception) {
-                println(e.localizedMessage)
+                System.err.println(e.localizedMessage)
             } finally {
                 println("Removing $connection!")
                 connections -= connection

@@ -1,8 +1,7 @@
 package com.neronguyen.domain.model
 
-import io.ktor.websocket.*
+import io.ktor.server.websocket.*
 
 class Connection(
-    val session: DefaultWebSocketSession,
-    val user: User
+    val session: WebSocketServerSession
 )
