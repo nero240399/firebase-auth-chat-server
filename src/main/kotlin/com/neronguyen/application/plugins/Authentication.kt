@@ -15,7 +15,7 @@ fun Application.configureFirebaseAuth() {
         firebase {
             validate { token ->
                 val user = User(
-                    id = token.uid,
+                    uid = token.uid,
                     name = token.name,
                     email = token.email,
                     photoUrl = token.picture

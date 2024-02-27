@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class MessageResponse(
-    val userId: String,
+    val uid: String,
     val username: String,
     val email: String,
     val photoUrl: String,

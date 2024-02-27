@@ -2,6 +2,7 @@ package com.neronguyen.domain.port
 
 import com.neronguyen.domain.model.User
 import com.neronguyen.domain.model.UserMessage
+import org.bson.types.ObjectId
 
 interface UserRepository {
 
@@ -9,5 +10,5 @@ interface UserRepository {
 
     suspend fun findAll(): List<User>
 
-    suspend fun insertUserMessage(userId: String, userMessage: UserMessage)
+    suspend fun insertUserMessage(objectId: ObjectId, userMessage: UserMessage)
 }
