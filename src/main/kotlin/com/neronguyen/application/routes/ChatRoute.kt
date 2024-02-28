@@ -31,7 +31,7 @@ fun Route.chatRoute() {
                 for (frame in incoming) {
                     frame as? Frame.Text ?: continue
                     val text = frame.readText()
-                    userRepository.insertUserMessage(user.id, UserMessage(text))
+                    userRepository.insertUserMessage(user.uid, UserMessage(text))
 
                     connections.forEach {
                         FirebaseMessaging.getInstance().send("[${user.name}] $text".toMessage())
@@ -49,6 +49,7 @@ fun Route.chatRoute() {
         get("chatHistory") {
             val users = userRepository.findAll()
             val chatHistory = users.flatMap { user -> user.toMessageResponseList() }
+                .sortedBy { message -> message.timestamp }
             call.respond(chatHistory)
         }
     }

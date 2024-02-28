@@ -8,7 +8,6 @@ import com.neronguyen.domain.model.UserMessage
 import com.neronguyen.domain.port.UserRepository
 import kotlinx.coroutines.flow.toList
 import org.bson.codecs.configuration.CodecConfigurationException
-import org.bson.types.ObjectId
 
 
 class DefaultUserRepository(
@@ -23,7 +22,6 @@ class DefaultUserRepository(
         try {
             val filter = Filters.eq(User::uid.name, user.uid)
             val updates = Updates.combine(
-                Updates.set(User::uid.name, user.uid),
                 Updates.set(User::name.name, user.name),
                 Updates.set(User::email.name, user.email),
                 Updates.set(User::photoUrl.name, user.photoUrl)
@@ -47,9 +45,9 @@ class DefaultUserRepository(
         }
     }
 
-    override suspend fun insertUserMessage(objectId: ObjectId, userMessage: UserMessage) {
+    override suspend fun insertUserMessage(uid: String, userMessage: UserMessage) {
         try {
-            val filter = Filters.eq("_id", objectId)
+            val filter = Filters.eq(User::uid.name, uid)
             val updates = Updates.push(User::messages.name, userMessage)
             val options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
             mongoDatabase.getCollection<User>(USER_COLLECTION).findOneAndUpdate(filter, updates, options)
