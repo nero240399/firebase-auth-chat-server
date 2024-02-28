@@ -6,10 +6,15 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class MessageResponse(
+    val content: String,
+    val timestamp: Instant = Clock.System.now(),
+    val senderInfo: SenderInfo
+)
+
+@Serializable
+data class SenderInfo(
     val uid: String,
-    val username: String,
+    val name: String,
     val email: String,
     val photoUrl: String,
-    val content: String,
-    val timestamp: Instant = Clock.System.now()
 )

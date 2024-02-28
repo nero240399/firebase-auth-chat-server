@@ -1,6 +1,7 @@
 package com.neronguyen.domain.model
 
 import com.neronguyen.application.response.MessageResponse
+import com.neronguyen.application.response.SenderInfo
 import io.ktor.server.auth.*
 import kotlinx.datetime.toKotlinInstant
 import org.bson.codecs.pojo.annotations.BsonId
@@ -24,19 +25,23 @@ data class UserMessage(
 
 fun User.toMessageResponseList(): List<MessageResponse> = this.messages.map {
     MessageResponse(
-        uid = uid,
-        username = name,
-        email = email,
-        photoUrl = photoUrl,
         content = it.content,
-        timestamp = it.timestamp.toKotlinInstant()
+        timestamp = it.timestamp.toKotlinInstant(),
+        senderInfo = SenderInfo(
+            uid = uid,
+            name = name,
+            email = email,
+            photoUrl = photoUrl,
+        )
     )
 }
 
 fun User.toMessageResponse(message: String) = MessageResponse(
-    uid = uid,
-    username = name,
-    email = email,
-    photoUrl = photoUrl,
     content = message,
+    senderInfo = SenderInfo(
+        uid = uid,
+        name = name,
+        email = email,
+        photoUrl = photoUrl,
+    )
 )
