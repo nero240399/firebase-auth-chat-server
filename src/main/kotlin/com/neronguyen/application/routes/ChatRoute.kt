@@ -31,14 +31,13 @@ fun Route.chatRoute() {
                 for (frame in incoming) {
                     frame as? Frame.Text ?: continue
                     val text = frame.readText()
+
                     userRepository.insertUserMessage(user.uid, UserMessage(text))
+                    FirebaseMessaging.getInstance().send("[${user.name}] $text".toMessage())
 
                     connections
                         .filter { it != connection }
-                        .forEach {
-                            FirebaseMessaging.getInstance().send("[${user.name}] $text".toMessage())
-                            it.session.sendSerialized(user.toMessageResponse(text))
-                        }
+                        .forEach { it.session.sendSerialized(user.toMessageResponse(text)) }
                 }
             } catch (e: Exception) {
                 System.err.println(e.localizedMessage)
